@@ -1,0 +1,1 @@
+System.TypeLoadException: 'Could not load type 'System.Object' from assembly 'System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e' because the parent does not exist.'
