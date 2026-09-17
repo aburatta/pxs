@@ -3,9 +3,9 @@ import sys
 from pathlib import Path
 
 # ---------- EDIT THESE SETTINGS ----------
-API_DIR = Path(r"C:\Program Files\Energy Exemplar\PLEXOS 10.0 API")
-SOLUTION_PATH = Path(r"C:\PLEXOS\Model Base Solution\Model Base Solution.zip")
-OUTPUT_CSV = Path(r"C:\PLEXOS\Exports\generator_results.csv")
+API_DIR = Path(r"C:\Program Files\Energy Exemplar\PLEXOS 12.0")
+SOLUTION_PATH = Path(r"J:\DATA\WF\Power Marketing & Planning\Planning\Nassar\Python Tool Test Folder\Plexos Solutions\69965\Model WE - T2 Case 155 F1 Solution.zip")
+OUTPUT_CSV = Path(r"J:\DATA\WF\Power Marketing & Planning\Planning\Nassar\Python Tool Test Folder\Plexos Solutions\69965")
 
 COLLECTION_KEY = "SystemGenerators"
 PARENT_NAME = ""       # Empty means all parents
