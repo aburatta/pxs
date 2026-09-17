@@ -1,2 +1,23 @@
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	NETSDK1045	The current .NET SDK does not support targeting .NET 8.0.  Either target .NET 5.0 or lower, or use a version of the .NET SDK that supports .NET 8.0.	PlexosSolutionQuery	C:\Program Files\dotnet\sdk\5.0.408\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.TargetFrameworkInference.targets	141	
+runfile('C:/Users/e162197/.spyder-py3/temp.py', wdir='C:/Users/e162197/.spyder-py3')
+Traceback (most recent call last):
+
+  File C:\ProgramData\Anaconda3\Lib\site-packages\spyder_kernels\py3compat.py:356 in compat_exec
+    exec(code, globals, locals)
+
+  File c:\users\e162197\.spyder-py3\temp.py:104
+    main()
+
+  File c:\users\e162197\.spyder-py3\temp.py:61 in main
+    Solution, SimulationPhaseEnum, PeriodEnum, SeriesTypeEnum = load_plexos_api()
+
+  File c:\users\e162197\.spyder-py3\temp.py:40 in load_plexos_api
+    clr.AddReference(assembly)
+
+FileNotFoundException: Could not load file or assembly 'EEDataFactory, Culture=neutral, PublicKeyToken=null'. The system cannot find the file specified.
+File name: 'EEDataFactory, Culture=neutral, PublicKeyToken=null'
+   at System.Reflection.RuntimeAssembly.InternalLoad(AssemblyName assemblyName, StackCrawlMark& stackMark, AssemblyLoadContext assemblyLoadContext, RuntimeAssembly requestingAssembly, Boolean throwOnFileNotFound)
+   at System.Reflection.Assembly.Load(AssemblyName assemblyRef)
+   at Python.Runtime.AssemblyManager.LoadAssembly(AssemblyName name)
+   at Python.Runtime.CLRModule.AddReference(String name)
+   at InvokeStub_CLRModule.AddReference(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
