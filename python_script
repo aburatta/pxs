@@ -1,0 +1,104 @@
+import csv
+import sys
+from pathlib import Path
+
+# ---------- EDIT THESE SETTINGS ----------
+API_DIR = Path(r"C:\Program Files\Energy Exemplar\PLEXOS 10.0 API")
+SOLUTION_PATH = Path(r"C:\PLEXOS\Model Base Solution\Model Base Solution.zip")
+OUTPUT_CSV = Path(r"C:\PLEXOS\Exports\generator_results.csv")
+
+COLLECTION_KEY = "SystemGenerators"
+PARENT_NAME = ""       # Empty means all parents
+CHILD_NAME = ""        # Empty means all children
+PHASE_NAME = "STSchedule"
+PERIOD_NAME = "Interval"
+SERIES_NAME = "Properties"
+# ----------------------------------------
+
+
+def load_plexos_api():
+    if not API_DIR.is_dir():
+        raise FileNotFoundError(f"PLEXOS API folder was not found: {API_DIR}")
+
+    if not SOLUTION_PATH.is_file():
+        raise FileNotFoundError(f"Solution ZIP was not found: {SOLUTION_PATH}")
+
+    sys.path.insert(0, str(API_DIR))
+
+    # Required for the newer PLEXOS API that uses modern .NET.
+    from pythonnet import load
+    load("coreclr")
+
+    import clr
+
+    for assembly in (
+        "EEUTILITY",
+        "EEDataFactory",
+        "EnergyExemplar.PLEXOS.Utility",
+        "PLEXOS_NET.Core",
+    ):
+        clr.AddReference(assembly)
+
+    from PLEXOS_NET.Core import Solution
+    from EEUTILITY.Enums import SimulationPhaseEnum
+    from EnergyExemplar.PLEXOS.Utility.Enums import PeriodEnum, SeriesTypeEnum
+
+    return Solution, SimulationPhaseEnum, PeriodEnum, SeriesTypeEnum
+
+
+def public_properties(row):
+    result = {}
+
+    for prop in row.GetType().GetProperties():
+        if prop.CanRead and prop.GetIndexParameters().Length == 0:
+            value = prop.GetValue(row, None)
+            result[prop.Name] = "" if value is None else str(value)
+
+    return result
+
+
+def main():
+    Solution, SimulationPhaseEnum, PeriodEnum, SeriesTypeEnum = load_plexos_api()
+    solution = Solution()
+
+    try:
+        solution.Connection(str(SOLUTION_PATH))
+        collection_ids = solution.FetchAllCollectionIds()
+
+        if not collection_ids.ContainsKey(COLLECTION_KEY):
+            available = sorted(str(key) for key in collection_ids.Keys)
+            raise KeyError(
+                f"Collection '{COLLECTION_KEY}' is not available.\n"
+                f"Available keys:\n" + "\n".join(available)
+            )
+
+        rows = list(solution.QueryToList(
+            getattr(SimulationPhaseEnum, PHASE_NAME),
+            collection_ids[COLLECTION_KEY],
+            PARENT_NAME,
+            CHILD_NAME,
+            getattr(PeriodEnum, PERIOD_NAME),
+            getattr(SeriesTypeEnum, SERIES_NAME),
+        ))
+
+        records = [public_properties(row) for row in rows]
+        columns = sorted(
+            {column for record in records for column in record}
+        )
+
+        OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
+
+        with OUTPUT_CSV.open("w", newline="", encoding="utf-8-sig") as file:
+            writer = csv.DictWriter(file, fieldnames=columns)
+            writer.writeheader()
+            writer.writerows(records)
+
+        print(f"Retrieved {len(records)} row(s).")
+        print(f"CSV created: {OUTPUT_CSV}")
+
+    finally:
+        solution.Close()
+
+
+if __name__ == "__main__":
+    main()
