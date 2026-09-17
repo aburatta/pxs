@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <PlexosApiDir Condition="'$(PlexosApiDir)' == ''">$(PLEXOS_API_DIR)</PlexosApiDir>
+  </PropertyGroup>
+  <Target Name="RequirePlexosApi" BeforeTargets="ResolveReferences">
+    <Error Condition="'$(PlexosApiDir)' == ''" Text="Set PlexosApiDir (or PLEXOS_API_DIR) to your PLEXOS API directory." />
+    <Error Condition="!Exists('$(PlexosApiDir)\PLEXOS_NET.Core.dll')" Text="PLEXOS_NET.Core.dll was not found in: $(PlexosApiDir)" />
+  </Target>
+  <ItemGroup>
+    <Reference Include="PLEXOS_NET.Core"><HintPath>$(PlexosApiDir)\PLEXOS_NET.Core.dll</HintPath><Private>true</Private></Reference>
+    <Reference Include="EEUTILITY"><HintPath>$(PlexosApiDir)\EEUTILITY.dll</HintPath><Private>true</Private></Reference>
+    <Reference Include="EnergyExemplar.PLEXOS.Utility"><HintPath>$(PlexosApiDir)\EnergyExemplar.PLEXOS.Utility.dll</HintPath><Private>true</Private></Reference>
+    <None Include="$(PlexosApiDir)\master.xml" Link="master.xml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PlexosApiDir)\transform.xsl" Link="transform.xsl" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
