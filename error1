@@ -10,7 +10,7 @@ Traceback (most recent call last):
   File c:\users\e162197\.spyder-py3\temp.py:86 in main
     Solution, SimulationPhaseEnum, PeriodEnum, SeriesTypeEnum = load_plexos_api()
 
-  File c:\users\e162197\.spyder-py3\temp.py:62 in load_plexos_api
-    clr.AddReference(str(assembly_path))
+  File c:\users\e162197\.spyder-py3\temp.py:58 in load_plexos_api
+    raise FileNotFoundError(
 
-AttributeError: module 'clr' has no attribute 'AddReference'
+FileNotFoundError: Required PLEXOS API DLL was not found: C:\Program Files\Energy Exemplar\PLEXOS 12.0\EEDataFactory.dll
