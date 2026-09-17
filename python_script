@@ -31,13 +31,27 @@ def load_plexos_api():
 
     import clr
 
-    for assembly in (
-        "EEUTILITY",
-        "EEDataFactory",
-        "EnergyExemplar.PLEXOS.Utility",
-        "PLEXOS_NET.Core",
-    ):
-        clr.AddReference(assembly)
+import os
+
+# Lets Windows find any PLEXOS native dependencies in this folder.
+os.add_dll_directory(str(API_DIR))
+
+assembly_files = (
+    "EEUTILITY.dll",
+    "EEDataFactory.dll",
+    "EnergyExemplar.PLEXOS.Utility.dll",
+    "PLEXOS_NET.Core.dll",
+)
+
+for assembly_file in assembly_files:
+    assembly_path = API_DIR / assembly_file
+
+    if not assembly_path.is_file():
+        raise FileNotFoundError(
+            f"Required PLEXOS API DLL was not found: {assembly_path}"
+        )
+
+    clr.AddReference(str(assembly_path))
 
     from PLEXOS_NET.Core import Solution
     from EEUTILITY.Enums import SimulationPhaseEnum
